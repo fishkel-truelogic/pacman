@@ -218,6 +218,13 @@ public class Board extends JPanel implements ActionListener {
 		}
 	}
 
-	
+	public Pacman getPacman() {
+		return pacman;
+	}
 
+
+	public void setPacman(Pacman pacman) {
+		this.pacman = pacman;
+	}
+	
 }
