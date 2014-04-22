@@ -4,11 +4,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
 
+import javax.swing.ImageIcon;
 import javax.swing.Timer;
 
 import ar.com.finit.pacman.ui.Board;
 import ar.com.finit.pacman.ui.Movible;
-import ar.com.finit.pacman.ui.wall.RightTopWall;
 
 /**
  * @author leo
@@ -17,7 +17,7 @@ public abstract class Ghost extends Movible implements ActionListener {
 
 	private static final int DELAY = 400;
 	private Timer timer;
-	private boolean blue = false;
+	protected boolean blue = false;
 	
 	public Ghost(Board board) {
 		super(board);
@@ -68,7 +68,19 @@ public abstract class Ghost extends Movible implements ActionListener {
 		if (direction == DOWN) return dir == UP;
 		return false;
 	}
-	
-	
 
+	public boolean isBlue() {
+		return blue;
+	}
+
+	public void setBlue(boolean blue) {
+		this.blue = blue;
+		if (blue) {
+			ImageIcon i = new ImageIcon("GreyGhost.png");
+			image = i.getImage();
+		} else {
+			image = null;
+		}
+	}
+	
 }

@@ -10,6 +10,7 @@ import javax.swing.Timer;
 import ar.com.finit.pacman.ui.Board;
 import ar.com.finit.pacman.ui.Movible;
 import ar.com.finit.pacman.ui.dot.Dot;
+import ar.com.finit.pacman.ui.dot.impl.BigDot;
 
 /**
  * @author leo
@@ -78,9 +79,11 @@ public class Pacman extends Movible implements ActionListener {
 
 	private void eat() {
 		if (board.getLabyrinth().getPixels()[y][x] instanceof Dot) {
+			if (board.getLabyrinth().getPixels()[y][x] instanceof BigDot) {
+				board.bigDotAction();
+			}
 			board.getLabyrinth().getPixels()[y][x] = null;
 			points  += 100;
-			
 		}
 	}
 

@@ -8,7 +8,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -86,9 +85,17 @@ public class Board extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		for (Ghost ghost: ghosts) {
 			if (pacman.getX() == ghost.getX() && pacman.getY() == ghost.getY()) {
-				timer.stop();
-				pacman.getTimer().stop();
-				break;
+				if(ghost.isBlue()) {
+					ghost.setX(14);
+					ghost.setY(11);
+					ghost.setBlue(false);
+					ghost.setDirection(Movible.LEFT);
+					pacman.setPoints(pacman.getPoints() + 500);
+				} else {
+					timer.stop();
+					pacman.getTimer().stop();
+					break;
+				}
 			}
 		}
 		repaint();
@@ -159,6 +166,44 @@ public class Board extends JPanel implements ActionListener {
 
 	public void setLabyrinth(Labyrinth labyrinth) {
 		this.labyrinth = labyrinth;
+	}
+
+
+	public void bigDotAction() {
+		for (Ghost ghost: ghosts) {
+			ghost.setBlue(true);
+		}
+		timer.restart();
+		for (ActionListener al : timer.getActionListeners()) {
+			if (!al.equals(this)) {
+				timer.removeActionListener(al);
+			}
+		}
+		timer.addActionListener(new GhostActionListener(this));
+	}
+	private class GhostActionListener implements ActionListener {
+
+		private int cont = 0;
+		private Board board;
+		
+		public GhostActionListener(Board board) {
+			this.board = board;
+		}
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			cont++;
+			if (cont == 5000) {
+				board.bigDotRevert();
+			}
+		}
+		
+	}
+
+	public void bigDotRevert() {
+		for (Ghost ghost: ghosts) {
+			ghost.setBlue(false);
+		}
 	}
 
 	

@@ -49,6 +49,7 @@
 								<copy file="RedGhost.png" tofile="${basedir}/target/RedGhost.png" />
 								<copy file="OrangeGhost.png" tofile="${basedir}/target/OrangeGhost.png" />
 								<copy file="PinkGhost.png" tofile="${basedir}/target/PinkGhost.png" />
+								<copy file="GreyGhost.png" tofile="${basedir}/target/GreyGhost.png" />
 								<copy file="VWall.png" tofile="${basedir}/target/VWall.png" />
 								<copy file="HWall.png" tofile="${basedir}/target/HWall.png" />
 								<copy file="RightTopWall.png" tofile="${basedir}/target/RightTopWall.png" />
@@ -60,6 +61,7 @@
 								<copy file="P_LEFT.png" tofile="${basedir}/target/P_LEFT.png" />
 								<copy file="P_RIGHT.png" tofile="${basedir}/target/P_RIGHT.png" />
 								<copy file="SmallDot.png" tofile="${basedir}/target/SmallDot.png" />
+								<copy file="BigDot.png" tofile="${basedir}/target/BigDot.png" />
 							</tasks>
 						</configuration>
 					</execution>

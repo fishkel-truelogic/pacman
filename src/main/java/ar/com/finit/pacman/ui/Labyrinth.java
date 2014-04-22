@@ -1,6 +1,7 @@
 package ar.com.finit.pacman.ui;
 
 import ar.com.finit.pacman.ui.dot.Dot;
+import ar.com.finit.pacman.ui.dot.impl.BigDot;
 import ar.com.finit.pacman.ui.dot.impl.SmallDot;
 import ar.com.finit.pacman.ui.wall.HWall;
 import ar.com.finit.pacman.ui.wall.LeftBottomWall;
@@ -396,6 +397,10 @@ public class Labyrinth {
 				pixels[i][j] = null;
 			}
 		}
+		pixels[3][1] = new BigDot();
+		pixels[3][Board.M_WIDTH - 2] = new BigDot();
+		pixels[22][1] = new BigDot();
+		pixels[22][Board.M_WIDTH - 2] = new BigDot();
 	}
 
 	public Pixel[][] getPixels() {
