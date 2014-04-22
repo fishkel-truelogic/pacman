@@ -81,6 +81,7 @@ public class Pacman extends Movible implements ActionListener {
 		if (board.getLabyrinth().getPixels()[y][x] instanceof Dot) {
 			if (board.getLabyrinth().getPixels()[y][x] instanceof BigDot) {
 				board.bigDotAction();
+				points  += 475;
 			}
 			board.getLabyrinth().getPixels()[y][x] = null;
 			points  += 100;

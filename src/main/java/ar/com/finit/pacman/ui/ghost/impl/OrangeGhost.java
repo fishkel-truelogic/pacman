@@ -16,6 +16,7 @@ public class OrangeGhost extends Ghost {
 		super(board);
 		x = 14;
 		y = 11;
+		direction = RIGHT;
 	}
 
 	@Override

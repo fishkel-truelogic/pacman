@@ -2,6 +2,7 @@ package ar.com.finit.pacman.ui;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -57,6 +58,17 @@ public class Board extends JPanel implements ActionListener {
 		for (Ghost ghost: ghosts) {
 			paint(ghost, g);
 		}
+		paintPoints(g);
+	}
+
+
+	private void paintPoints(Graphics g) {
+		String msg = "Pts:" + pacman.getPoints();
+		Font small = new Font("Helvetica", Font.BOLD, 10);
+		g.setColor(Color.white);
+		g.setFont(small);
+		g.drawString(msg, 7, 7);
+		
 	}
 
 
