@@ -19,6 +19,7 @@ public abstract class Ghost extends Movible implements ActionListener {
 	public static final int DELAY = 150;
 	public static final int BLUE_DELAY = 550;
 	private static final int DIFICULTY = 80;
+	private static final int ATTACK_RADIO = 4;
 	private Timer timer;
 	protected boolean blue = false;
 
@@ -94,6 +95,15 @@ public abstract class Ghost extends Movible implements ActionListener {
 	}
 
 	private boolean attackPacman(Pacman pacman) {
+		int px = pacman.getX();
+		int py = pacman.getY();
+		int radioXmin = x - ATTACK_RADIO;
+		int radioXmax = x + ATTACK_RADIO;
+		int radioYmin = y - ATTACK_RADIO;
+		int radioYmax = y + ATTACK_RADIO;
+		if (px >= radioXmin && px <= radioXmax && py >= radioYmin && py <= radioYmax) {
+			return true;
+		}
 		int n = 2 + new Random().nextInt(100 - DIFICULTY);
 		for (int i = 2; i < n; i++) {
 			if (n % i == 0)
