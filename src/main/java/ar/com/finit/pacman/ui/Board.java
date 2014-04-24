@@ -14,7 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 import ar.com.finit.pacman.ui.ghost.Ghost;
-import ar.com.finit.pacman.ui.ghost.impl.BlueGhost;
+import ar.com.finit.pacman.ui.ghost.impl.GreyGhost;
 import ar.com.finit.pacman.ui.ghost.impl.OrangeGhost;
 import ar.com.finit.pacman.ui.ghost.impl.PinkGhost;
 import ar.com.finit.pacman.ui.ghost.impl.RedGhost;
@@ -28,7 +28,7 @@ public class Board extends JPanel implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 
-	private static final int DELAY = 1;
+	private static final int DELAY = 150;
 
 	public static final int M_WIDTH = 29;
 
@@ -49,6 +49,8 @@ public class Board extends JPanel implements ActionListener {
 	private Pacman pacman;
 	
 	private ArrayList<Ghost> ghosts;
+
+	private int moveIteration;
 	
 	@Override
 	protected void paintComponent(Graphics g) {
@@ -73,8 +75,8 @@ public class Board extends JPanel implements ActionListener {
 
 
 	private void paint(Pixel pixel, Graphics g) {
-		int x = MARGIN_LEFT + pixel.getX() * Pixel.SIZE;;
-		int y = MARGIN_TOP + pixel.getY() * Pixel.SIZE;
+		int x = MARGIN_LEFT + pixel.getX() * Pixel.SIZE - Pixel.SIZE + moveIteration ;
+		int y = MARGIN_TOP + pixel.getY() * Pixel.SIZE - Pixel.SIZE + moveIteration;
 		g.drawImage(pixel.getImage(), x, y, this);
 		
 	}
@@ -96,11 +98,12 @@ public class Board extends JPanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		for (Ghost ghost: ghosts) {
-			if (pacman.getX() == ghost.getX() && pacman.getY() == ghost.getY()) {
+			if (ghostTouchPacman(ghost)) {
 				if(ghost.isBlue()) {
 					ghost.setX(14);
 					ghost.setY(11);
 					ghost.setBlue(false);
+					ghost.getTimer().setDelay(Ghost.DELAY);
 					ghost.setDirection(Movible.LEFT);
 					pacman.setPoints(pacman.getPoints() + 500);
 				} else {
@@ -110,15 +113,47 @@ public class Board extends JPanel implements ActionListener {
 				}
 			}
 		}
-		repaint();
+		for (moveIteration = 0; moveIteration < Pixel.SIZE; moveIteration ++) {
+			repaint();
+		}
 	}
 	
+	private boolean ghostTouchPacman(Ghost ghost) {
+		int pxMin = pacman.getX() * Pixel.SIZE - Pixel.SIZE / 2;
+		int pxMax = pacman.getX() * Pixel.SIZE + Pixel.SIZE / 2;
+		int pyMin = pacman.getY() * Pixel.SIZE - Pixel.SIZE / 2;
+		int pyMax = pacman.getY() * Pixel.SIZE + Pixel.SIZE / 2;
+		int gxMin = ghost.getX() * Pixel.SIZE - Pixel.SIZE / 2;
+		int gxMax = ghost.getX() * Pixel.SIZE + Pixel.SIZE / 2;
+		int gyMin = ghost.getY() * Pixel.SIZE - Pixel.SIZE / 2;
+		int gyMax = ghost.getY() * Pixel.SIZE + Pixel.SIZE / 2;
+		if (pacman.getX() == ghost.getX()) {
+			if (gyMax >= pyMin && gyMax <= pyMax) {
+				return true;
+			}
+			if (gyMin >= pyMin && gyMin <= pyMax) {
+				return true;
+			}
+		}
+		if (pacman.getY() == ghost.getY()) {
+			if (gxMax >= pxMin && gxMax <= pxMax) {
+				return true;
+			}
+			if (gxMin >= pxMin && gxMin <= pxMax) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
+
 	public Board() {
 		super();
 		pacman = new Pacman(this);
 		ghosts= new ArrayList<Ghost>();
 		ghosts.add(new RedGhost(this));
-		ghosts.add(new BlueGhost(this));
+		ghosts.add(new GreyGhost(this));
 		ghosts.add(new PinkGhost(this));
 		ghosts.add(new OrangeGhost(this));
 		labyrinth = new Labyrinth();
@@ -184,6 +219,8 @@ public class Board extends JPanel implements ActionListener {
 	public void bigDotAction() {
 		for (Ghost ghost: ghosts) {
 			ghost.setBlue(true);
+			ghost.getTimer().setDelay(Ghost.BLUE_DELAY);
+			ghost.getTimer().restart();
 		}
 		timer.restart();
 		for (ActionListener al : timer.getActionListeners()) {
@@ -205,7 +242,7 @@ public class Board extends JPanel implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			cont++;
-			if (cont == 5000) {
+			if (cont == 50) {
 				board.bigDotRevert();
 			}
 		}
@@ -215,6 +252,8 @@ public class Board extends JPanel implements ActionListener {
 	public void bigDotRevert() {
 		for (Ghost ghost: ghosts) {
 			ghost.setBlue(false);
+			ghost.getTimer().setDelay(Ghost.DELAY);
+			ghost.getTimer().restart();
 		}
 	}
 

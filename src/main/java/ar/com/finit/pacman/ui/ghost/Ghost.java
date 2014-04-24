@@ -16,7 +16,9 @@ import ar.com.finit.pacman.ui.impl.Pacman;
  */
 public abstract class Ghost extends Movible implements ActionListener {
 
-	private static final int DELAY = 400;
+	public static final int DELAY = 150;
+	public static final int BLUE_DELAY = 550;
+	private static final int DIFICULTY = 80;
 	private Timer timer;
 	protected boolean blue = false;
 
@@ -44,6 +46,9 @@ public abstract class Ghost extends Movible implements ActionListener {
 			if (board.getLabyrinth().isIntersection(x, y)) {
 				direction = newDir();
 			}
+			if (blue) {
+				direction = getPacmanOppositeDirection(board.getPacman());
+			}
 			switch (direction) {
 			case LEFT:
 				moveLeft();
@@ -63,7 +68,6 @@ public abstract class Ghost extends Movible implements ActionListener {
 	}
 
 	private int newDir() {
-		int dir = 0;
 		if (attackPacman(board.getPacman())) {
 			return getPacmanDirection(board.getPacman());
 		} else {
@@ -71,9 +75,18 @@ public abstract class Ghost extends Movible implements ActionListener {
 		}
 	}
 
+	private int getPacmanOppositeDirection(Pacman pacman) {
+		int dir = oppositeDirectionOf(getPacmanDirection(pacman));
+		if (canMoveIn(dir)) {
+			return dir;
+		} else {
+			return randomDir();
+		}
+	}
+
 	private int randomDir() {
 		int dir = LEFT + new Random().nextInt(Math.abs(DOWN + 1 - LEFT));
-		if (canMoveIn(dir) && !isOpositToDirection(dir)) {
+		if (canMoveIn(dir) && !isOppositeToDirection(dir)) {
 			return dir;
 		} else {
 			return randomDir();
@@ -81,7 +94,7 @@ public abstract class Ghost extends Movible implements ActionListener {
 	}
 
 	private boolean attackPacman(Pacman pacman) {
-		int n = 2 + new Random().nextInt(100);
+		int n = 2 + new Random().nextInt(100 - DIFICULTY);
 		for (int i = 2; i < n; i++) {
 			if (n % i == 0)
 				return false;
@@ -117,16 +130,21 @@ public abstract class Ghost extends Movible implements ActionListener {
 		}
 	}
 
-	private boolean isOpositToDirection(int dir) {
-		if (direction == LEFT)
-			return dir == RIGHT;
-		if (direction == RIGHT)
-			return dir == LEFT;
-		if (direction == UP)
-			return dir == DOWN;
-		if (direction == DOWN)
-			return dir == UP;
-		return false;
+	private boolean isOppositeToDirection(int dir) {
+		return direction == oppositeDirectionOf(dir);
+	}
+
+	private int oppositeDirectionOf(int dir) {
+		if (dir == LEFT)
+			return RIGHT;
+		if (dir == RIGHT)
+			return LEFT;
+		if (dir == UP)
+			return DOWN;
+		if (dir == DOWN)
+			return UP;
+		return 0;
+
 	}
 
 	public boolean isBlue() {
@@ -136,11 +154,20 @@ public abstract class Ghost extends Movible implements ActionListener {
 	public void setBlue(boolean blue) {
 		this.blue = blue;
 		if (blue) {
-			ImageIcon i = new ImageIcon("GreyGhost.png");
+			ImageIcon i = new ImageIcon("BlueGhost.png");
 			image = i.getImage();
 		} else {
 			image = null;
 		}
 	}
+
+	public Timer getTimer() {
+		return timer;
+	}
+
+	public void setTimer(Timer timer) {
+		this.timer = timer;
+	}
+	
 
 }

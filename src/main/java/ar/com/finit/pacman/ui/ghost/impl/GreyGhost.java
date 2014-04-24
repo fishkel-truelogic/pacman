@@ -10,9 +10,9 @@ import ar.com.finit.pacman.ui.ghost.Ghost;
 /**
  * @author leo
  */
-public class BlueGhost extends Ghost {
+public class GreyGhost extends Ghost {
 
-	public BlueGhost(Board board) {
+	public GreyGhost(Board board) {
 		super(board);
 		x = 14;
 		y = 11;
@@ -22,7 +22,7 @@ public class BlueGhost extends Ghost {
 	@Override
 	public Image getImage() {
 		if (image == null) {
-			ImageIcon i = new ImageIcon("BlueGhost.png");
+			ImageIcon i = new ImageIcon("GreyGhost.png");
 			image = i.getImage();
 		}
 		return image;

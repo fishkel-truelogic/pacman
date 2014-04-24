@@ -20,13 +20,14 @@ public class Pacman extends Movible implements ActionListener {
 	private Timer timer;
 	private int nextDirection;
 	private int points = 0;
+	private static final int DELAY = 150;
 	
 	public Pacman(Board board) {
 		super(board);
 		x = 14;
 		y = 23;
 		direction = 0;
-		timer = new Timer(250, this);
+		timer = new Timer(DELAY, this);
 		timer.start();
 	}
 	
