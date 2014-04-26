@@ -18,8 +18,9 @@ public abstract class Ghost extends Movible implements ActionListener {
 
 	public static final int DELAY = 150;
 	public static final int BLUE_DELAY = 550;
-	private static final int DIFICULTY = 80;
-	private static final int ATTACK_RADIO = 4;
+	public static int BLUE_TIME = 100;
+	private static int DIFICULTY = 0;
+	private static int ATTACK_RADIO = 1;
 	private Timer timer;
 	protected boolean blue = false;
 
@@ -178,6 +179,17 @@ public abstract class Ghost extends Movible implements ActionListener {
 	public void setTimer(Timer timer) {
 		this.timer = timer;
 	}
-	
 
+	public abstract void born();
+
+
+	public static void incrementDificulty() {
+		DIFICULTY += 20;
+		ATTACK_RADIO ++;
+		BLUE_TIME -= 10; 
+	}
+	
+	
+	
+	
 }

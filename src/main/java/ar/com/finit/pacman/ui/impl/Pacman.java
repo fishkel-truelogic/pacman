@@ -20,15 +20,34 @@ public class Pacman extends Movible implements ActionListener {
 	private Timer timer;
 	private int nextDirection;
 	private int points = 0;
+	private Image liveImage;
+	private int lives;
 	private static final int DELAY = 150;
 	
 	public Pacman(Board board) {
 		super(board);
-		x = 14;
-		y = 23;
-		direction = 0;
+		born();
+		lives = 3;
 		timer = new Timer(DELAY, this);
 		timer.start();
+	}
+	
+	public void born() {
+		x = 14;
+		y = 23;
+		direction = LEFT;
+		nextDirection = LEFT;
+		
+	}
+	
+	public Image getLiveImage() {
+		if (liveImage == null) {
+			ImageIcon i = new ImageIcon("P_RIGHT.png");
+			liveImage = i.getImage();
+			
+		}
+		return liveImage;
+		
 	}
 	
 	@Override
@@ -104,7 +123,13 @@ public class Pacman extends Movible implements ActionListener {
 	public void setTimer(Timer timer) {
 		this.timer = timer;
 	}
-	
-	
+
+	public int getLives() {
+		return lives;
+	}
+
+	public void setLives(int lives) {
+		this.lives = lives;
+	}
 	
 }

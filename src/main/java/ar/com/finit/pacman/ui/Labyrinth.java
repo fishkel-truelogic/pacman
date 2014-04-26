@@ -431,5 +431,16 @@ public class Labyrinth {
 		}
 		return axisX > 0 && axisY > 0;
 	}
+
+	public boolean containsDots() {
+		for (int i = 0; i < Board.M_HEIGHT; i++) {
+			for (int j = 0; j < Board.M_WIDTH; j++) {
+				if (pixels[i][j] instanceof Dot) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 	
 }

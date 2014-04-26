@@ -14,9 +14,7 @@ public class OrangeGhost extends Ghost {
 
 	public OrangeGhost(Board board) {
 		super(board);
-		x = 14;
-		y = 11;
-		direction = RIGHT;
+		born();
 	}
 
 	@Override
@@ -26,6 +24,14 @@ public class OrangeGhost extends Ghost {
 			image = i.getImage();
 		}
 		return image;
+	}
+
+	@Override
+	public void born() {
+		x = 14;
+		y = 11;
+		direction = RIGHT;
+		blue = false;
 	}
 
 }

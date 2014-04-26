@@ -52,6 +52,8 @@ public class Board extends JPanel implements ActionListener {
 
 	private int moveIteration;
 	
+	private int level = 1;
+	
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -61,6 +63,26 @@ public class Board extends JPanel implements ActionListener {
 			paint(ghost, g);
 		}
 		paintPoints(g);
+		paintLives(g);
+		paintLevel(g);
+	}
+
+
+	private void paintLevel(Graphics g) {
+		String msg = "level:" + level;
+		Font small = new Font("Helvetica", Font.BOLD, 10);
+		g.setColor(Color.white);
+		g.setFont(small);
+		g.drawString(msg, 200, 7);
+	}
+
+
+	private void paintLives(Graphics g) {
+		int x = MARGIN_LEFT + 5 , y = MARGIN_TOP + 18 * Pixel.SIZE;
+		for (int i = 0; i < pacman.getLives(); i++) {
+			g.drawImage(pacman.getLiveImage(), x, y, this);
+			x += + (i + 1) * Pixel.SIZE + 5;
+		}
 	}
 
 
@@ -97,24 +119,44 @@ public class Board extends JPanel implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		for (Ghost ghost: ghosts) {
-			if (ghostTouchPacman(ghost)) {
-				if(ghost.isBlue()) {
-					ghost.setX(14);
-					ghost.setY(11);
-					ghost.setBlue(false);
-					ghost.getTimer().setDelay(Ghost.DELAY);
-					ghost.setDirection(Movible.LEFT);
-					pacman.setPoints(pacman.getPoints() + 500);
-				} else {
-					timer.stop();
-					pacman.getTimer().stop();
-					break;
+		if(labyrinth.containsDots()) {
+			for (Ghost ghost: ghosts) {
+				if (ghostTouchPacman(ghost)) {
+					if(ghost.isBlue()) {
+						ghost.setX(14);
+						ghost.setY(11);
+						ghost.setBlue(false);
+						ghost.getTimer().setDelay(Ghost.DELAY);
+						ghost.setDirection(Movible.LEFT);
+						pacman.setPoints(pacman.getPoints() + 500);
+					} else {
+						pacman.setLives(pacman.getLives() -1);
+						if (pacman.getLives() < 0) {
+							timer.stop();
+							pacman.getTimer().stop();
+						} else {
+							pacman.born();
+							bigDotRevert();
+							for (Ghost g: ghosts) {
+								g.born();
+							}
+						}
+						break;
+					}
 				}
 			}
-		}
-		for (moveIteration = 0; moveIteration < Pixel.SIZE; moveIteration ++) {
-			repaint();
+			for (moveIteration = 0; moveIteration < Pixel.SIZE; moveIteration ++) {
+				repaint();
+			}
+		} else {
+			labyrinth = new Labyrinth();
+			level++;
+			pacman.born();
+			for (Ghost g: ghosts) {
+				g.born();
+			}
+			Ghost.incrementDificulty();
+			
 		}
 	}
 	
@@ -242,7 +284,7 @@ public class Board extends JPanel implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			cont++;
-			if (cont == 50) {
+			if (cont == Ghost.BLUE_TIME) {
 				board.bigDotRevert();
 			}
 		}
