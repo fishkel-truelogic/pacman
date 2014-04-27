@@ -31,7 +31,7 @@ public class GreyGhost extends Ghost {
 		x = 14;
 		y = 11;
 		direction = RIGHT;
-		blue = false;
+		this.setBlue(false);
 		
 	}
 

@@ -54,6 +54,8 @@ public class Board extends JPanel implements ActionListener {
 	
 	private int level = 1;
 	
+	private boolean paused;
+	
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -65,6 +67,31 @@ public class Board extends JPanel implements ActionListener {
 		paintPoints(g);
 		paintLives(g);
 		paintLevel(g);
+		if (pacman.getLives() < 0) {
+			paintGameOver(g);
+		}
+		if (paused) {
+			paintPaused(g);
+		}
+	}
+
+
+	private void paintPaused(Graphics g) {
+		String msg = "PAUSED";
+		Font small = new Font("Helvetica", Font.BOLD, 14);
+		g.setColor(Color.white);
+		g.setFont(small);
+		g.drawString(msg, 13 * Pixel.SIZE, 15 * Pixel.SIZE);
+		
+	}
+
+
+	private void paintGameOver(Graphics g) {
+		String msg = "GAME OVER";
+		Font small = new Font("Helvetica", Font.BOLD, 14);
+		g.setColor(Color.white);
+		g.setFont(small);
+		g.drawString(msg, 12 * Pixel.SIZE, 15 * Pixel.SIZE);
 	}
 
 
@@ -123,11 +150,7 @@ public class Board extends JPanel implements ActionListener {
 			for (Ghost ghost: ghosts) {
 				if (ghostTouchPacman(ghost)) {
 					if(ghost.isBlue()) {
-						ghost.setX(14);
-						ghost.setY(11);
-						ghost.setBlue(false);
-						ghost.getTimer().setDelay(Ghost.DELAY);
-						ghost.setDirection(Movible.LEFT);
+						ghost.born();
 						pacman.setPoints(pacman.getPoints() + 500);
 					} else {
 						pacman.setLives(pacman.getLives() -1);
@@ -136,7 +159,6 @@ public class Board extends JPanel implements ActionListener {
 							pacman.getTimer().stop();
 						} else {
 							pacman.born();
-							bigDotRevert();
 							for (Ghost g: ghosts) {
 								g.born();
 							}
@@ -149,17 +171,27 @@ public class Board extends JPanel implements ActionListener {
 				repaint();
 			}
 		} else {
-			labyrinth = new Labyrinth();
-			level++;
+			levelUp();
+		}
+	}
+	
+	private void levelUp() {
+		pacman.setPoints(pacman.getPoints() + 1000);
+		labyrinth = new Labyrinth();
+		level++;
+		if (level == 6) {
+			timer.stop();
+			pacman.getTimer().stop();
+		} else {
 			pacman.born();
 			for (Ghost g: ghosts) {
 				g.born();
 			}
 			Ghost.incrementDificulty();
-			
 		}
 	}
-	
+
+
 	private boolean ghostTouchPacman(Ghost ghost) {
 		int pxMin = pacman.getX() * Pixel.SIZE - Pixel.SIZE / 2;
 		int pxMax = pacman.getX() * Pixel.SIZE + Pixel.SIZE / 2;
@@ -225,6 +257,8 @@ public class Board extends JPanel implements ActionListener {
 				case KeyEvent.VK_RIGHT: board.onKeyRight(); break;
 				case KeyEvent.VK_UP: board.onKeyUp(); break;
 				case KeyEvent.VK_DOWN: board.onKeyDown(); break;
+				case KeyEvent.VK_ENTER: board.onKeyEnter(); break;
+				case KeyEvent.VK_R: board.onKeyRestart(); break;
 			}
 		}
 
@@ -233,6 +267,39 @@ public class Board extends JPanel implements ActionListener {
 	public void onKeyLeft() {
 		pacman.setNextDirection(Pacman.LEFT);
 	}
+
+	public void onKeyRestart() {
+		level = 1;
+		Ghost.restartDificulty();
+		labyrinth = new Labyrinth();
+		for (Ghost ghost : ghosts) {
+			ghost.born();
+		}
+		pacman = new Pacman(this);
+		timer.restart();
+		repaint();
+	}
+
+
+	public void onKeyEnter() {
+		if (!paused) {
+			for (Ghost ghost : ghosts) {
+				ghost.getTimer().stop();
+			}
+			pacman.getTimer().stop();
+			timer.stop();
+		} else {
+			for (Ghost ghost : ghosts) {
+				ghost.getTimer().restart();
+			}
+			pacman.getTimer().restart();
+			timer.restart();
+		}
+		paused = !paused;
+		repaint();
+		
+	}
+
 
 	public void onKeyDown() {
 		pacman.setNextDirection(Pacman.DOWN);
@@ -261,8 +328,6 @@ public class Board extends JPanel implements ActionListener {
 	public void bigDotAction() {
 		for (Ghost ghost: ghosts) {
 			ghost.setBlue(true);
-			ghost.getTimer().setDelay(Ghost.BLUE_DELAY);
-			ghost.getTimer().restart();
 		}
 		timer.restart();
 		for (ActionListener al : timer.getActionListeners()) {
@@ -294,8 +359,6 @@ public class Board extends JPanel implements ActionListener {
 	public void bigDotRevert() {
 		for (Ghost ghost: ghosts) {
 			ghost.setBlue(false);
-			ghost.getTimer().setDelay(Ghost.DELAY);
-			ghost.getTimer().restart();
 		}
 	}
 

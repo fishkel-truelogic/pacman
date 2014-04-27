@@ -167,9 +167,12 @@ public abstract class Ghost extends Movible implements ActionListener {
 		if (blue) {
 			ImageIcon i = new ImageIcon("BlueGhost.png");
 			image = i.getImage();
+			this.getTimer().setDelay(Ghost.BLUE_DELAY);
 		} else {
+			this.getTimer().setDelay(Ghost.DELAY);
 			image = null;
 		}
+		this.timer.restart();
 	}
 
 	public Timer getTimer() {
@@ -187,6 +190,12 @@ public abstract class Ghost extends Movible implements ActionListener {
 		DIFICULTY += 20;
 		ATTACK_RADIO ++;
 		BLUE_TIME -= 10; 
+	}
+
+	public static void restartDificulty() {
+		DIFICULTY = 0;
+		ATTACK_RADIO = 1;
+		BLUE_TIME = 100; 
 	}
 	
 	

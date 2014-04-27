@@ -31,7 +31,7 @@ public class RedGhost extends Ghost {
 		x = 14;
 		y = 11;
 		direction = LEFT;
-		blue = false;
+		this.setBlue(false);
 	}
 
 }
