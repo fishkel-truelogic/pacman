@@ -1,6 +1,9 @@
 package ar.com.finit.pacman.ui;
 
 import java.awt.Image;
+import java.net.URL;
+
+import javax.swing.ImageIcon;
 
 /**
  * @author leo
@@ -8,6 +11,8 @@ import java.awt.Image;
 public abstract class Pixel {
 
 	public static final int SIZE = 16;
+
+	public static final String IMAGE_PATH = "/META-INF/";
 	
 	protected Image image;
 	
@@ -15,7 +20,14 @@ public abstract class Pixel {
 	
 	protected int y;
 	
-	public abstract Image getImage();
+	public Image getImage() {
+		if (image == null) {
+			URL imgURL = getClass().getResource(Pixel.IMAGE_PATH + this.getClass().getSimpleName() + ".png");
+			ImageIcon i = new ImageIcon(imgURL);
+			image = i.getImage();
+		}
+		return image;
+	}
 
 	public int getX() {
 		return x;

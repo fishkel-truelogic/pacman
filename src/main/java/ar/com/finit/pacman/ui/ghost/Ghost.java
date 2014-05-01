@@ -2,6 +2,7 @@ package ar.com.finit.pacman.ui.ghost;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.URL;
 import java.util.Random;
 
 import javax.swing.ImageIcon;
@@ -9,6 +10,7 @@ import javax.swing.Timer;
 
 import ar.com.finit.pacman.ui.Board;
 import ar.com.finit.pacman.ui.Movible;
+import ar.com.finit.pacman.ui.Pixel;
 import ar.com.finit.pacman.ui.impl.Pacman;
 
 /**
@@ -165,7 +167,8 @@ public abstract class Ghost extends Movible implements ActionListener {
 	public void setBlue(boolean blue) {
 		this.blue = blue;
 		if (blue) {
-			ImageIcon i = new ImageIcon("BlueGhost.png");
+			URL imgURL = getClass().getResource(Pixel.IMAGE_PATH + "BlueGhost.png");
+			ImageIcon i = new ImageIcon(imgURL);
 			image = i.getImage();
 			this.getTimer().setDelay(Ghost.BLUE_DELAY);
 		} else {

@@ -1,9 +1,5 @@
 package ar.com.finit.pacman.ui.ghost.impl;
 
-import java.awt.Image;
-
-import javax.swing.ImageIcon;
-
 import ar.com.finit.pacman.ui.Board;
 import ar.com.finit.pacman.ui.ghost.Ghost;
 
@@ -15,15 +11,6 @@ public class OrangeGhost extends Ghost {
 	public OrangeGhost(Board board) {
 		super(board);
 		born();
-	}
-
-	@Override
-	public Image getImage() {
-		if (image == null) {
-			ImageIcon i = new ImageIcon("OrangeGhost.png");
-			image = i.getImage();
-		}
-		return image;
 	}
 
 	@Override

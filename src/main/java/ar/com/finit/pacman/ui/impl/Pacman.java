@@ -3,12 +3,14 @@ package ar.com.finit.pacman.ui.impl;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.URL;
 
 import javax.swing.ImageIcon;
 import javax.swing.Timer;
 
 import ar.com.finit.pacman.ui.Board;
 import ar.com.finit.pacman.ui.Movible;
+import ar.com.finit.pacman.ui.Pixel;
 import ar.com.finit.pacman.ui.dot.Dot;
 import ar.com.finit.pacman.ui.dot.impl.BigDot;
 
@@ -42,7 +44,8 @@ public class Pacman extends Movible implements ActionListener {
 	
 	public Image getLiveImage() {
 		if (liveImage == null) {
-			ImageIcon i = new ImageIcon("P_RIGHT.png");
+			URL imgURL = getClass().getResource(Pixel.IMAGE_PATH + "P_RIGHT.png");
+			ImageIcon i = new ImageIcon(imgURL);
 			liveImage = i.getImage();
 			
 		}
@@ -59,7 +62,8 @@ public class Pacman extends Movible implements ActionListener {
 		case UP: imageName = "P_UP.png"; break;
 		case DOWN: imageName = "P_DOWN.png"; break;
 		}
-		ImageIcon i = new ImageIcon(imageName);
+		URL imgURL = getClass().getResource(Pixel.IMAGE_PATH + imageName);
+		ImageIcon i = new ImageIcon(imgURL);
 		image = i.getImage();
 		return image;
 	}
