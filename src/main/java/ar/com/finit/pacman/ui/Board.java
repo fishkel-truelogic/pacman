@@ -359,40 +359,40 @@ public class Board extends JPanel implements ActionListener {
 	}
 
 	public void onKeyLeft() {
-		pacman.setNextDirection(Pacman.LEFT);
-	}
-
-	public void onKeyDown() {
-		pacman.setNextDirection(Pacman.DOWN);
-
-	}
-
-	public void onKeyUp() {
-		pacman.setNextDirection(Pacman.UP);
-
-	}
-
-	public void onKeyRight() {
-		pacman.setNextDirection(Pacman.RIGHT);
-
-	}
-
-	public void onKeyA() {
 		missPacman.setNextDirection(Pacman.LEFT);
 	}
 
-	public void onKeyS() {
+	public void onKeyDown() {
 		missPacman.setNextDirection(Pacman.DOWN);
 
 	}
 
-	public void onKeyW() {
+	public void onKeyUp() {
 		missPacman.setNextDirection(Pacman.UP);
 
 	}
 
-	public void onKeyD() {
+	public void onKeyRight() {
 		missPacman.setNextDirection(Pacman.RIGHT);
+
+	}
+
+	public void onKeyA() {
+		pacman.setNextDirection(Pacman.LEFT);
+	}
+
+	public void onKeyS() {
+		pacman.setNextDirection(Pacman.DOWN);
+
+	}
+
+	public void onKeyW() {
+		pacman.setNextDirection(Pacman.UP);
+
+	}
+
+	public void onKeyD() {
+		pacman.setNextDirection(Pacman.RIGHT);
 
 	}
 
