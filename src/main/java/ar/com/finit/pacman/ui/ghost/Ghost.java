@@ -74,6 +74,8 @@ public abstract class Ghost extends Movible implements ActionListener {
 	private int newDir() {
 		if (attackPacman(board.getPacman())) {
 			return getPacmanDirection(board.getPacman());
+		} else if (attackPacman(board.getMissPacman())) {
+				return getPacmanDirection(board.getMissPacman());
 		} else {
 			return randomDir();
 		}
@@ -98,6 +100,8 @@ public abstract class Ghost extends Movible implements ActionListener {
 	}
 
 	private boolean attackPacman(Pacman pacman) {
+		if (pacman.getLives() < 0)
+			return false;
 		int px = pacman.getX();
 		int py = pacman.getY();
 		int radioXmin = x - ATTACK_RADIO;

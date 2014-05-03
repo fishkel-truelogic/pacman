@@ -24,43 +24,43 @@ public class Pacman extends Movible implements ActionListener {
 	private int points = 0;
 	private Image liveImage;
 	private int lives;
+	private String imageName;
 	private static final int DELAY = 150;
 	
-	public Pacman(Board board) {
+	public Pacman(Board board, int firstDir, String imageName) {
 		super(board);
-		born();
+		born(firstDir);
+		this.imageName = imageName;
 		lives = 3;
 		timer = new Timer(DELAY, this);
 		timer.start();
 	}
 	
-	public void born() {
+	public void born(int firstDir) {
 		x = 14;
 		y = 23;
-		direction = LEFT;
-		nextDirection = LEFT;
+		direction = firstDir;
+		nextDirection = firstDir;
 		
 	}
 	
 	public Image getLiveImage() {
 		if (liveImage == null) {
-			URL imgURL = getClass().getResource(Pixel.IMAGE_PATH + "P_RIGHT.png");
+			URL imgURL = getClass().getResource(Pixel.IMAGE_PATH + imageName + "_RIGHT.png");
 			ImageIcon i = new ImageIcon(imgURL);
 			liveImage = i.getImage();
-			
 		}
 		return liveImage;
-		
 	}
 	
 	@Override
 	public Image getImage() {
 		String imageName = null;
 		switch (direction) {
-		case LEFT: imageName = "P_LEFT.png"; break;
-		case RIGHT: imageName = "P_RIGHT.png"; break;
-		case UP: imageName = "P_UP.png"; break;
-		case DOWN: imageName = "P_DOWN.png"; break;
+		case LEFT: imageName = this.imageName + "_LEFT.png"; break;
+		case RIGHT: imageName = this.imageName + "_RIGHT.png"; break;
+		case UP: imageName = this.imageName + "_UP.png"; break;
+		case DOWN: imageName = this.imageName + "_DOWN.png"; break;
 		}
 		URL imgURL = getClass().getResource(Pixel.IMAGE_PATH + imageName);
 		ImageIcon i = new ImageIcon(imgURL);
@@ -134,6 +134,12 @@ public class Pacman extends Movible implements ActionListener {
 
 	public void setLives(int lives) {
 		this.lives = lives;
+	}
+
+	public void die() {
+		this.getTimer().stop();
+		this.setX(0);
+		this.setY(0);
 	}
 	
 }
