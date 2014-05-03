@@ -1,6 +1,6 @@
 var spawn = require("child_process").spawn;
 
-var mvnCmd = "mvn.bat";
+var mvnCmd = process.platform.match(/win/) ? "mvn.bat" : "mvn";
 
 module.exports = function(grunt) {
 
@@ -12,9 +12,11 @@ module.exports = function(grunt) {
 
 		var args = ["clean", "install"];
 
-		if (grunt.option("no-test")) {
+		if (grunt.option("no.test")) {
 			args.push("-Dmaven.test.skip=true");
 		}
+
+		grunt.log.writeln(mvnCmd + " " + args);
 
 		var build = spawn(mvnCmd, args);
 

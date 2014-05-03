@@ -1,5 +1,6 @@
 {
 	"devDependencies": {
-		"grunt" : "latest"
+		"grunt" : "latest",
+		"xml2js" : "latest"
 	}
 }
