@@ -25,11 +25,14 @@ public abstract class Ghost extends Movible implements ActionListener {
 	private static int ATTACK_RADIO = 1;
 	private Timer timer;
 	protected boolean blue = false;
+	private int jailTime;
 
-	public Ghost(Board board) {
+	public Ghost(Board board, int jailTime) {
 		super(board);
+		this.jailTime = jailTime;
 		timer = new Timer(DELAY, this);
 		timer.start();
+		
 	}
 
 	@Override
@@ -186,8 +189,31 @@ public abstract class Ghost extends Movible implements ActionListener {
 		this.timer = timer;
 	}
 
-	public abstract void born();
+	public void born() {
+		x = 14;
+		y = 13;
+		direction = LEFT;
+		this.setBlue(false);
+		jailedOn();
+	}
 
+	public void jailedOn() {
+		this.timer.addActionListener(new GhostJailListener(this));
+		
+	}
+	
+	public void jailedOff() {
+		for (ActionListener ac : timer.getActionListeners()) {
+			if (ac instanceof GhostJailListener) {
+				timer.removeActionListener(ac);
+			}
+		}
+		x = 14;
+		y = 11;
+		direction = newDir();
+		
+	}
+	
 
 	public static void incrementDificulty() {
 		DIFICULTY += 20;
@@ -201,7 +227,34 @@ public abstract class Ghost extends Movible implements ActionListener {
 		BLUE_TIME = 100; 
 	}
 	
-	
+	public int getJailTime() {
+		return jailTime;
+	}
+
+	public void setJailTime(int jailTime) {
+		this.jailTime = jailTime;
+	}
+
+
+
+	private class GhostJailListener implements ActionListener {
+		
+		private Ghost ghost;
+		private int cont;
+
+		public GhostJailListener(Ghost ghost) {
+			this.ghost = ghost;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if (cont == ghost.getJailTime())
+				ghost.jailedOff();
+			else
+				cont++;
+		}
+		
+	}
 	
 	
 }

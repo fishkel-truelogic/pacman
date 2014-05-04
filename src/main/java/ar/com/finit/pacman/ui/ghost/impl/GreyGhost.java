@@ -8,18 +8,10 @@ import ar.com.finit.pacman.ui.ghost.Ghost;
  */
 public class GreyGhost extends Ghost {
 
+	private static final int JAIL_TIME = 50;
+
 	public GreyGhost(Board board) {
-		super(board);
+		super(board, JAIL_TIME);
 		born();
 	}
-
-	@Override
-	public void born() {
-		x = 14;
-		y = 11;
-		direction = RIGHT;
-		this.setBlue(false);
-		
-	}
-
 }
