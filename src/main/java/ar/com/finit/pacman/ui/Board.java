@@ -8,11 +8,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.Timer;
 
+import ar.com.finit.pacman.score.Score;
 import ar.com.finit.pacman.ui.ghost.Ghost;
 import ar.com.finit.pacman.ui.ghost.impl.GreyGhost;
 import ar.com.finit.pacman.ui.ghost.impl.OrangeGhost;
@@ -55,23 +58,37 @@ public class Board extends JPanel implements ActionListener {
 	private int level = 1;
 	
 	private boolean paused;
+
+	private Score score;
+	
+	JTextField txtFld;
 	
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		paintLabyrinth(g);
-		paint(pacman, g);
-		for (Ghost ghost: ghosts) {
-			paint(ghost, g);
-		}
-		paintPoints(g);
-		paintLives(g);
-		paintLevel(g);
-		if (pacman.getLives() < 0) {
+		if (pacman.getLives() < 0 || this.level > 5) {
+			if (txtFld == null) {
+				txtFld = new JTextField();
+				txtFld.setBounds(((M_WIDTH / 2) - 4) * Pixel.SIZE, M_HEIGHT * Pixel.SIZE - Pixel.SIZE * 5 , 200, 32);
+				txtFld.setVisible(true);
+				txtFld.addKeyListener(new InputScoreListener(this));
+				add(txtFld);
+				repaint();
+				paintInputName(g);
+			}
 			paintGameOver(g);
-		}
-		if (paused) {
-			paintPaused(g);
+		} else {
+			paintLabyrinth(g);
+			paint(pacman, g);
+			for (Ghost ghost: ghosts) {
+				paint(ghost, g);
+			}
+			paintPoints(g);
+			paintLives(g);
+			paintLevel(g);
+			if (paused) {
+				paintPaused(g);
+			}
 		}
 	}
 
@@ -85,13 +102,30 @@ public class Board extends JPanel implements ActionListener {
 		
 	}
 
-
-	private void paintGameOver(Graphics g) {
-		String msg = "GAME OVER";
+	private void paintInputName(Graphics g) {
+		String msg = "Name: ";
 		Font small = new Font("Helvetica", Font.BOLD, 14);
 		g.setColor(Color.white);
 		g.setFont(small);
-		g.drawString(msg, 12 * Pixel.SIZE, 15 * Pixel.SIZE);
+		g.drawString(msg, 3 * Pixel.SIZE, M_HEIGHT * Pixel.SIZE - Pixel.SIZE * 5 );
+		
+	}
+
+
+	private void paintGameOver(Graphics g) {
+		String msg = "GAME OVER";
+		Font font = new Font("Helvetica", Font.BOLD, 14);
+		g.setColor(Color.white);
+		g.setFont(font);
+		g.drawString(msg, 12 * Pixel.SIZE, 2 * Pixel.SIZE);
+		
+		font = new Font("Helvetica", Font.BOLD, 22);
+		int i = 0;
+		for (int j = 0; j < 10; j++) {
+			msg = score.getScore()[j][0] + "   ---   " + score.getScore()[j][1];
+			g.drawString(msg, 12 * Pixel.SIZE, (5 + i) * Pixel.SIZE);
+			i += 2;
+		}
 	}
 
 
@@ -224,6 +258,7 @@ public class Board extends JPanel implements ActionListener {
 
 	public Board() {
 		super();
+		score = new Score();
 		pacman = new Pacman(this);
 		ghosts= new ArrayList<Ghost>();
 		ghosts.add(new RedGhost(this));
@@ -277,6 +312,7 @@ public class Board extends JPanel implements ActionListener {
 		}
 		pacman = new Pacman(this);
 		timer.restart();
+		txtFld = null;
 		repaint();
 	}
 
@@ -370,5 +406,41 @@ public class Board extends JPanel implements ActionListener {
 	public void setPacman(Pacman pacman) {
 		this.pacman = pacman;
 	}
+	private class InputScoreListener implements KeyListener {
+
+		private Board board;
+
+		public InputScoreListener(Board board) {
+			this.board = board;
+		}
+
+		@Override
+		public void keyTyped(KeyEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void keyPressed(KeyEvent e) {
+			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+				board.saveScore();
+			}
+		}
+
+		@Override
+		public void keyReleased(KeyEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
 	
+	
+
+	public void saveScore() {
+		score.saveScore(txtFld.getText(), pacman.getPoints());
+		txtFld.setVisible(false);
+		remove(txtFld);
+		repaint();
+	}
 }
